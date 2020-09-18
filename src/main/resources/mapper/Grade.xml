@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sun.Dao.GradeDao">
+    <resultMap id="ResultMapGrade" type="com.sun.Entity.Grade">
+        <id property="id" column="g_id" jdbcType="INTEGER"/>
+        <result property="name" column="g_name" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Grade_field">
+                    g_id,g_name
+            </sql>
+
+    <sql id="Grade_insert">
+                    #{id},#{name}
+            </sql>
+    <sql id="Grade_where">
+        <if test="id != null and id !=''">and g_id=#{id}</if>
+        <if test="name != null and name !=''">and g_name=#{name}</if>
+    </sql>
+
+    <sql id="Grade_update">
+        <if test="name != null and name !=''">g_name=#{name},</if>
+    </sql>
+
+    <insert id="insert" parameterType="Grade">
+        insert <include refid="Grade_field"></include> from grade
+    </insert>
+
+    <delete id="deleteById" parameterType="java.lang.Integer">
+                delete  from grade
+                where  g_id=#{id}
+            </delete>
+
+    <delete id="deleteByEntity" parameterType="Grade">
+        delete from grade
+        <where>
+            <include refid="Grade_where"></include>
+        </where>
+    </delete>
+
+    <delete id="deleteByMap" parameterType="java.util.Map">
+        delete from grade
+        <where>
+            <include refid="Grade_where"></include>
+        </where>
+    </delete>
+
+    <update id="update" parameterType="Grade">
+        update grade
+        <set>
+            <include refid="Grade_update"></include>
+        </set>
+        <where>
+            <include refid="Grade_where"></include>
+        </where>
+    </update>
+
+    <update id="updateById" parameterType="Grade">
+        update grade
+        <set>
+            <include refid="Grade_update"></include>
+        </set>
+        where g_id=#{id}
+    </update>
+
+    <select id="listByMap" parameterType="java.util.Map" resultMap="ResultMapGrade">
+        select <include refid="Grade_field"></include> from grade
+        <where>
+            <include refid="Grade_where"></include>
+        </where>
+    </select>
+
+    <select id="listAll" resultMap="ResultMapGrade">
+        select <include refid="Grade_field"></include> from grade
+    </select>
+
+    <select id="listAllByEntity" parameterType="Grade" resultMap="ResultMapGrade">
+        select <include refid="Grade_field"></include> from grade
+        <where>
+            <include refid="Grade_where"></include>
+        </where>
+    </select>
+
+    <select id="load" parameterType="java.lang.Integer">
+        select <include refid="Grade_field"></include> from grade
+        where g_id=#{id}
+    </select>
+
+    <select id="getById" parameterType="java.lang.Integer">
+        select <include refid="Grade_field"></include> from grade
+        where g_id=#{id}
+    </select>
+
+    <select id="getByMap" parameterType="java.util.Map" resultMap="ResultMapGrade">
+        select <include refid="Grade_field"></include> from grade
+        <where>
+            <include refid="Grade_where"></include>
+        </where>
+    </select>
+    <select id="getByEntity" parameterType="Grade" resultMap="ResultMapGrade">
+        select <include refid="Grade_field"></include> from grade
+        <where>
+            <include refid="Grade_where"></include>
+        </where>
+    </select>
+
+    <select id="findByMap" parameterType="java.util.Map" resultMap="ResultMapGrade">
+        select <include refid="Grade_field"></include> from grade
+        <where>
+            <include refid="Grade_where"></include>
+        </where>
+    </select>
+
+    <select id="findByEntity" parameterType="Grade" resultMap="ResultMapGrade">
+        select <include refid="Grade_field"></include> from grade
+        <where>
+            <include refid="Grade_where"></include>
+        </where>
+    </select>
+
+    <!--            批量插入-->
+    <insert id="insertBatch" parameterType="java.util.List" useGeneratedKeys="false">
+        insert into grade values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.id},#{item.name})
+        </foreach>
+    </insert>
+    <!--            批量更新-->
+    <update id="updateBatch" parameterType="java.util.List" >
+        <foreach collection="list" item="item" index="index" separator=";">
+            update grade
+            <set>
+                <if test="item.name != null and item.name !=''">c_name=#{item.name},</if>
+            </set>
+            <where>
+                <if test="item.id != null and item.id !=''">g_id=#{item.id},</if>
+            </where>
+        </foreach>
+    </update>
+
+    <!--            执行sql语句-->
+    <select id="getBySqlReturnMap" resultType="java.util.Map">
+                ${sql}
+            </select>
+
+    <select id="getBySqlReturnEntity" resultMap="ResultMapGrade">
+                    ${sql}
+            </select>
+
+    <select id="listBySqlReturnMap" resultType="java.util.Map">
+                ${sql}
+            </select>
+
+    <select id="listBySqlReturnEntity" resultMap="ResultMapGrade">
+                ${sql}
+            </select>
+
+    <select id="findBySqlRerturnEntity" resultMap="ResultMapGrade">
+                    ${sql}
+            </select>
+
+    <update id="findBySqlRerturnEntity">
+                ${sql}
+            </update>
+
+    <delete id="deleteBySql">
+                ${sql}
+            </delete>
+
+</mapper>

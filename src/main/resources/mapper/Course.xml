@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sun.Dao.CourseDao">
+    <resultMap id="ResultMapCourse" type="com.sun.Entity.Course">
+        <id property="id" column="cr_id" jdbcType="INTEGER"/>
+        <result property="name" column="cr_name" jdbcType="VARCHAR"/>
+        <result property="time" column="cr_time" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Course_field">
+                    cr_id,cr_name,cr_time
+            </sql>
+
+    <sql id="Course_insert">
+                    #{id},#{name},#{time}
+            </sql>
+    <sql id="Course_where">
+        <if test="id != null and id !=''">and cr_id=#{id}</if>
+        <if test="name != null and name !=''">and cr_name=#{name}</if>
+        <if test="time != null and time !=''">and cr_time=#{time}</if>
+    </sql>
+
+    <sql id="Course_update">
+        <if test="name != null and name !=''">cr_name=#{name},</if>
+        <if test="time != null and time !=''">cr_time=#{time},</if>
+    </sql>
+
+    <insert id="insert" parameterType="Course">
+        insert <include refid="Course_field"></include> from course
+    </insert>
+
+    <delete id="deleteById" parameterType="java.lang.Integer">
+                delete  from course
+                where  cr_id=#{id}
+            </delete>
+
+    <delete id="deleteByEntity" parameterType="Course">
+        delete from course
+        <where>
+            <include refid="Course_where"></include>
+        </where>
+    </delete>
+
+    <delete id="deleteByMap" parameterType="java.util.Map">
+        delete from course
+        <where>
+            <include refid="Course_where"></include>
+        </where>
+    </delete>
+
+    <update id="update" parameterType="Course">
+        update course
+        <set>
+            <include refid="Course_update"></include>
+        </set>
+        <where>
+            <include refid="Course_where"></include>
+        </where>
+    </update>
+
+    <update id="updateById" parameterType="Course">
+        update course
+        <set>
+            <include refid="Course_update"></include>
+        </set>
+        where cr_id=#{id}
+    </update>
+
+    <select id="listByMap" parameterType="java.util.Map" resultMap="ResultMapCourse">
+        select <include refid="Course_field"></include> from course
+        <where>
+            <include refid="Course_where"></include>
+        </where>
+    </select>
+
+    <select id="listAll" resultMap="ResultMapCourse">
+        select <include refid="Course_field"></include> from course
+    </select>
+
+    <select id="listAllByEntity" parameterType="Course" resultMap="ResultMapCourse">
+        select <include refid="Course_field"></include> from course
+        <where>
+            <include refid="Course_where"></include>
+        </where>
+    </select>
+
+    <select id="load" parameterType="java.lang.Integer">
+        select <include refid="Course_field"></include> from course
+        where cr_id=#{id}
+    </select>
+
+    <select id="getById" parameterType="java.lang.Integer">
+        select <include refid="Course_field"></include> from course
+        where cr_id=#{id}
+    </select>
+
+    <select id="getByMap" parameterType="java.util.Map" resultMap="ResultMapCourse">
+        select <include refid="Course_field"></include> from course
+        <where>
+            <include refid="Course_where"></include>
+        </where>
+    </select>
+    <select id="getByEntity" parameterType="Course" resultMap="ResultMapCourse">
+        select <include refid="Course_field"></include> from course
+        <where>
+            <include refid="Course_where"></include>
+        </where>
+    </select>
+
+    <select id="findByMap" parameterType="java.util.Map" resultMap="ResultMapCourse">
+        select <include refid="Course_field"></include> from course
+        <where>
+            <include refid="Course_where"></include>
+        </where>
+    </select>
+
+    <select id="findByEntity" parameterType="Course" resultMap="ResultMapCourse">
+        select <include refid="Course_field"></include> from course
+        <where>
+            <include refid="Course_where"></include>
+        </where>
+    </select>
+
+    <!--            批量插入-->
+    <insert id="insertBatch" parameterType="java.util.List" useGeneratedKeys="false">
+        insert into course values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.id},#{item.name},#{item.time})
+        </foreach>
+    </insert>
+    <!--            批量更新-->
+    <update id="updateBatch" parameterType="java.util.List" >
+        <foreach collection="list" item="item" index="index" separator=";">
+            update course
+            <set>
+                <if test="item.name != null and item.name !=''">cr_name=#{item.name},</if>
+                <if test="item.time != null and item.time !=''">cr_time=#{item.time},</if>
+            </set>
+            <where>
+                <if test="item.id != null and item.id !=''">cr_id=#{item.id},</if>
+            </where>
+        </foreach>
+    </update>
+
+    <!--            执行sql语句-->
+    <select id="getBySqlReturnMap" resultType="java.util.Map">
+                ${sql}
+            </select>
+
+    <select id="getBySqlReturnEntity" resultMap="ResultMapCourse">
+                    ${sql}
+            </select>
+
+    <select id="listBySqlReturnMap" resultType="java.util.Map">
+                ${sql}
+            </select>
+
+    <select id="listBySqlReturnEntity" resultMap="ResultMapCourse">
+                ${sql}
+            </select>
+
+    <select id="findBySqlRerturnEntity" resultMap="ResultMapCourse">
+                    ${sql}
+            </select>
+
+    <update id="findBySqlRerturnEntity">
+                ${sql}
+            </update>
+
+    <delete id="deleteBySql">
+                ${sql}
+            </delete>
+
+</mapper>

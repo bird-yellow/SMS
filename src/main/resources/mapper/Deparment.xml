@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sun.Dao.DeparmentDao">
+    <resultMap id="ResultMapDeparment" type="com.sun.Entity.Deparment">
+        <id property="id" column="dp_id" jdbcType="INTEGER"/>
+        <result property="name" column="dp_name" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Deparment_field">
+                    dp_id,dp_name
+            </sql>
+
+    <sql id="Deparment_insert">
+                    #{id},#{name}
+            </sql>
+    <sql id="Deparment_where">
+        <if test="id != null and id !=''">and dp_id=#{id}</if>
+        <if test="name != null and name !=''">and dp_name=#{name}</if>
+    </sql>
+
+    <sql id="Deparment_update">
+        <if test="name != null and name !=''">dp_name=#{name},</if>
+    </sql>
+
+    <insert id="insert" parameterType="Deparment">
+        insert <include refid="Deparment_field"></include> from deparment
+    </insert>
+
+    <delete id="deleteById" parameterType="java.lang.Integer">
+                delete  from deparment
+                where  dp_id=#{id}
+            </delete>
+
+    <delete id="deleteByEntity" parameterType="Deparment">
+        delete from deparment
+        <where>
+            <include refid="Deparment_where"></include>
+        </where>
+    </delete>
+
+    <delete id="deleteByMap" parameterType="java.util.Map">
+        delete from deparment
+        <where>
+            <include refid="Deparment_where"></include>
+        </where>
+    </delete>
+
+    <update id="update" parameterType="Deparment">
+        update deparment
+        <set>
+            <include refid="Deparment_update"></include>
+        </set>
+        <where>
+            <include refid="Deparment_where"></include>
+        </where>
+    </update>
+
+    <update id="updateById" parameterType="Deparment">
+        update deparment
+        <set>
+            <include refid="Deparment_update"></include>
+        </set>
+        where dp_id=#{id}
+    </update>
+
+    <select id="listByMap" parameterType="java.util.Map" resultMap="ResultMapDeparment">
+        select <include refid="Deparment_field"></include> from deparment
+        <where>
+            <include refid="Deparment_where"></include>
+        </where>
+    </select>
+
+    <select id="listAll" resultMap="ResultMapDeparment">
+        select <include refid="Deparment_field"></include> from deparment
+    </select>
+
+    <select id="listAllByEntity" parameterType="Deparment" resultMap="ResultMapDeparment">
+        select <include refid="Deparment_field"></include> from deparment
+        <where>
+            <include refid="Deparment_where"></include>
+        </where>
+    </select>
+
+    <select id="load" parameterType="java.lang.Integer">
+        select <include refid="Deparment_field"></include> from deparment
+        where dp_id=#{id}
+    </select>
+
+    <select id="getById" parameterType="java.lang.Integer">
+        select <include refid="Deparment_field"></include> from deparment
+        where dp_id=#{id}
+    </select>
+
+    <select id="getByMap" parameterType="java.util.Map" resultMap="ResultMapDeparment">
+        select <include refid="Deparment_field"></include> from deparment
+        <where>
+            <include refid="Deparment_where"></include>
+        </where>
+    </select>
+    <select id="getByEntity" parameterType="Deparment" resultMap="ResultMapDeparment">
+        select <include refid="Deparment_field"></include> from deparment
+        <where>
+            <include refid="Deparment_where"></include>
+        </where>
+    </select>
+
+    <select id="findByMap" parameterType="java.util.Map" resultMap="ResultMapDeparment">
+        select <include refid="Deparment_field"></include> from deparment
+        <where>
+            <include refid="Deparment_where"></include>
+        </where>
+    </select>
+
+    <select id="findByEntity" parameterType="Deparment" resultMap="ResultMapDeparment">
+        select <include refid="Deparment_field"></include> from deparment
+        <where>
+            <include refid="Deparment_where"></include>
+        </where>
+    </select>
+
+    <!--            批量插入-->
+    <insert id="insertBatch" parameterType="java.util.List" useGeneratedKeys="false">
+        insert into deparment values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.id},#{item.name})
+        </foreach>
+    </insert>
+    <!--            批量更新-->
+    <update id="updateBatch" parameterType="java.util.List" >
+        <foreach collection="list" item="item" index="index" separator=";">
+            update deparment
+            <set>
+                <if test="item.name != null and item.name !=''">dp_name=#{item.name},</if>
+            </set>
+            <where>
+                <if test="item.id != null and item.id !=''">dp_id=#{item.id},</if>
+            </where>
+        </foreach>
+    </update>
+
+    <!--            执行sql语句-->
+    <select id="getBySqlReturnMap" resultType="java.util.Map">
+                ${sql}
+            </select>
+
+    <select id="getBySqlReturnEntity" resultMap="ResultMapDeparment">
+                    ${sql}
+            </select>
+
+    <select id="listBySqlReturnMap" resultType="java.util.Map">
+                ${sql}
+            </select>
+
+    <select id="listBySqlReturnEntity" resultMap="ResultMapDeparment">
+                ${sql}
+            </select>
+
+    <select id="findBySqlRerturnEntity" resultMap="ResultMapDeparment">
+                    ${sql}
+            </select>
+
+    <update id="findBySqlRerturnEntity">
+                ${sql}
+            </update>
+
+    <delete id="deleteBySql">
+                ${sql}
+            </delete>
+
+</mapper>

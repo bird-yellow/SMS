@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sun.Dao.ClazzDao">
+            <resultMap id="ResultMapClazz" type="com.sun.Entity.Clazz">
+                    <id property="id" column="c_id" jdbcType="INTEGER"/>
+                    <result property="name" column="c_name" jdbcType="VARCHAR"/>
+            </resultMap>
+
+            <sql id="Clazz_field">
+                    c_id,c_name
+            </sql>
+
+            <sql id="Clazz_insert">
+                    #{id},#{name}
+            </sql>
+            <sql id="Clazz_where">
+                <if test="id != null and id !=''">and c_id=#{id}</if>
+                <if test="name != null and name !=''">and c_name=#{name}</if>
+            </sql>
+
+            <sql id="Clazz_update">
+                    <if test="name != null and name !=''">c_name=#{name},</if>
+            </sql>
+
+            <insert id="insert" parameterType="Clazz">
+                    insert <include refid="Clazz_field"></include> from clazz
+            </insert>
+
+            <delete id="deleteById" parameterType="java.lang.Integer">
+                delete  from clazz
+                where  c_id=#{id}
+            </delete>
+
+            <delete id="deleteByEntity" parameterType="Clazz">
+                    delete from clazz
+                    <where>
+                       <include refid="Clazz_where"></include>
+                    </where>
+            </delete>
+
+            <delete id="deleteByMap" parameterType="java.util.Map">
+                    delete from clazz
+                    <where>
+                            <include refid="Clazz_where"></include>
+                    </where>
+            </delete>
+
+            <update id="update" parameterType="Clazz">
+                    update clazz
+                    <set>
+                        <include refid="Clazz_update"></include>
+                    </set>
+                    <where>
+                        <include refid="Clazz_where"></include>
+                    </where>
+            </update>
+
+            <update id="updateById" parameterType="Clazz">
+                    update clazz
+                    <set>
+                            <include refid="Clazz_update"></include>
+                    </set>
+                    where c_id=#{id}
+            </update>
+
+            <select id="listByMap" parameterType="java.util.Map" resultMap="ResultMapClazz">
+                    select <include refid="Clazz_field"></include> from clazz
+                    <where>
+                        <include refid="Clazz_where"></include>
+                    </where>
+            </select>
+
+            <select id="listAll" resultMap="ResultMapClazz">
+                    select <include refid="Clazz_field"></include> from clazz
+            </select>
+
+            <select id="listAllByEntity" parameterType="Clazz" resultMap="ResultMapClazz">
+                    select <include refid="Clazz_field"></include> from clazz
+                    <where>
+                        <include refid="Clazz_where"></include>
+                    </where>
+            </select>
+
+            <select id="load" parameterType="java.lang.Integer">
+                    select <include refid="Clazz_field"></include> from clazz
+                    where c_id=#{id}
+            </select>
+
+            <select id="getById" parameterType="java.lang.Integer">
+                select <include refid="Clazz_field"></include> from clazz
+                where c_id=#{id}
+            </select>
+
+            <select id="getByMap" parameterType="java.util.Map" resultMap="ResultMapClazz">
+                    select <include refid="Clazz_field"></include> from clazz
+                    <where>
+                            <include refid="Clazz_where"></include>
+                    </where>
+            </select>
+            <select id="getByEntity" parameterType="Clazz" resultMap="ResultMapClazz">
+                    select <include refid="Clazz_field"></include> from clazz
+                    <where>
+                            <include refid="Clazz_where"></include>
+                    </where>
+            </select>
+
+            <select id="findByMap" parameterType="java.util.Map" resultMap="ResultMapClazz">
+                select <include refid="Clazz_field"></include> from clazz
+                <where>
+                    <include refid="Clazz_where"></include>
+                </where>
+            </select>
+
+            <select id="findByEntity" parameterType="Clazz" resultMap="ResultMapClazz">
+                select <include refid="Clazz_field"></include> from clazz
+                <where>
+                    <include refid="Clazz_where"></include>
+                </where>
+            </select>
+
+<!--            批量插入-->
+            <insert id="insertBatch" parameterType="java.util.List" useGeneratedKeys="false">
+                insert into clazz values
+                <foreach collection="list" item="item" index="index" separator=",">
+                        (#{item.id},#{item.name})
+                </foreach>
+            </insert>
+<!--            批量更新-->
+            <update id="updateBatch" parameterType="java.util.List" >
+                     <foreach collection="list" item="item" index="index" separator=";">
+                            update clazz
+                            <set>
+                                    <if test="item.name != null and item.name !=''">c_name=#{item.name},</if>
+                            </set>
+                            <where>
+                                    <if test="item.id != null and item.id !=''">c_id=#{item.id},</if>
+                            </where>
+                     </foreach>
+            </update>
+
+<!--            执行sql语句-->
+            <select id="getBySqlReturnMap" resultType="java.util.Map">
+                ${sql}
+            </select>
+
+            <select id="getBySqlReturnEntity" resultMap="ResultMapClazz">
+                    ${sql}
+            </select>
+
+            <select id="listBySqlReturnMap" resultType="java.util.Map">
+                ${sql}
+            </select>
+
+            <select id="listBySqlReturnEntity" resultMap="ResultMapClazz">
+                ${sql}
+            </select>
+
+            <select id="findBySqlRerturnEntity" resultMap="ResultMapClazz">
+                    ${sql}
+            </select>
+
+            <update id="findBySqlRerturnEntity">
+                ${sql}
+            </update>
+
+            <delete id="deleteBySql">
+                ${sql}
+            </delete>
+
+</mapper>
