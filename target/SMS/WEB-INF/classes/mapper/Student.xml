@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sun.Dao.StudentDao">
+    <resultMap id="ResultMapStudent" type="com.sun.Entity.Student">
+        <id property="id" column="s_id" jdbcType="INTEGER"/>
+        <result property="username" column="s_username" jdbcType="VARCHAR"/>
+        <result property="password" column="s_password" jdbcType="VARCHAR"/>
+        <result property="sex" column="s_sex" jdbcType="VARCHAR"/>
+        <result property="phone" column="s_phone" jdbcType="VARCHAR"/>
+        <result property="nation" column="s_nation" jdbcType="VARCHAR"/>
+        <result property="nativePlace" column="s_nativePlace" jdbcType="VARCHAR"/>
+        <result property="cId" column="s_cId" jdbcType="INTEGER"/>
+        <result property="gId" column="s_gId" jdbcType="INTEGER"/>
+        <result property="dpId" column="s_dpId" jdbcType="INTEGER"/>
+        <result property="tId" column="s_tId" jdbcType="INTEGER"/>
+        <association property="clazz" column="s_cId" select="com.sun.Dao.ClazzDao.load"/>
+        <association property="grade" column="s_gId" select="com.sun.Dao.GradeDao.load"/>
+        <association property="deparment" column="s_dpId" select="com.sun.Dao.DeparmentDao.load"/>
+        <association property="teacher" column="s_tId" select="com.sun.Dao.TeacherDao.load"/>
+        <collection property="courseList" ofType="com.sun.Entity.Course" column="s_id" select="com.sun.Dao.CourseDao.ListByCourseId"/>
+    </resultMap>
+
+    <sql id="Student_field">
+                    s_id,s_username,s_password,s_sex,s_phone,s_nation,s_nativePlace,
+                    s_cId,s_gId,s_dpId,s_tId
+            </sql>
+
+    <sql id="Student_insert">
+                    #{id},#{username},#{password},#{sex},#{phone},#{nation},#{nativePlace},
+                    #{cId},#{gId},#{dpId},#{tId}
+    </sql>
+
+    <sql id="Student_where">
+        <if test="id != null and id !=''">and s_id=#{id}</if>
+        <if test="username != null and username !=''">and s_username=#{s_username}</if>
+        <if test="password != null and password !=''">and password=#{s_password}</if>
+        <if test="sex != null and sex !=''">and sex=#{s_sex}</if>
+        <if test="phone != null and phone != null">and phone=#{s_phone}</if>
+        <if test="nation != null and nation !=">and nation=#{s_nation}</if>
+        <if test="nativePlace != null and nativePlace !=''">and nativePlace=#{s_nativePlace}</if>
+        <if test="cId != null and cId !=''">and cId=#{s_cId}</if>
+        <if test="gId != null and gId !=''">and gId=#{s_gId}</if>
+        <if test="dpId != null and dpId !=''">and dpId=#{s_dpId}</if>
+        <if test="tId != null and tId !=''">and tId=#{s_tId}</if>
+    </sql>
+
+    <sql id="Student_update">
+        <if test="username != null and username !=''">s_username=#{username},</if>
+        <if test="password != null and password !=''">s_password=#{password},</if>
+        <if test="sex != null and sex !=''">s_sex=#{sex},</if>
+        <if test="phone != null and phone !=''">s_phone=#{phone},</if>
+        <if test="nation != null and nation !=''">s_nation=#{nation},</if>
+        <if test="nativePlace != null and nativePlace !=''">s_nativePlace=#{nativePlace},</if>
+        <if test="cId != null and cId !=''">s_cId=#{cId},</if>
+        <if test="gId != null and gId !=''">s_gId=#{gId},</if>
+        <if test="dpId != null and dpId !=''">s_dpId=#{dpId},</if>
+        <if test="tId != null and tId !=''">s_tId=#{tId},</if>
+    </sql>
+
+    <insert id="insert" parameterType="Student">
+        insert <include refid="Student_field"></include> from student
+    </insert>
+
+    <delete id="deleteById" parameterType="java.lang.Integer">
+                delete  from student
+                where  s_id=#{id}
+            </delete>
+
+    <delete id="deleteByEntity" parameterType="Student">
+        delete from student
+        <where>
+            <include refid="Student_where"></include>
+        </where>
+    </delete>
+
+    <delete id="deleteByMap" parameterType="java.util.Map">
+        delete from student
+        <where>
+            <include refid="Student_where"></include>
+        </where>
+    </delete>
+
+    <update id="update" parameterType="Student">
+        update student
+        <set>
+            <include refid="Student_update"></include>
+        </set>
+        <where>
+            <include refid="Student_where"></include>
+        </where>
+    </update>
+
+    <update id="updateById" parameterType="Student">
+        update student
+        <set>
+            <include refid="Student_update"></include>
+        </set>
+        where s_id=#{id}
+    </update>
+
+    <select id="listByMap" parameterType="java.util.Map" resultMap="ResultMapStudent">
+        select <include refid="Student_field"></include> from student
+        <where>
+            <include refid="Student_where"></include>
+        </where>
+    </select>
+
+    <select id="listAll" resultMap="ResultMapStudent">
+        select <include refid="Student_field"></include> from student
+    </select>
+
+    <select id="listAllByEntity" parameterType="Student" resultMap="ResultMapStudent">
+        select <include refid="Student_field"></include> from student
+        <where>
+            <include refid="Student_where"></include>
+        </where>
+    </select>
+
+    <select id="load" parameterType="java.lang.Integer">
+        select <include refid="Student_field"></include> from student
+        where s_id=#{id}
+    </select>
+
+    <select id="getById" parameterType="java.lang.Integer">
+        select <include refid="Student_field"></include> from student
+        where s_id=#{id}
+    </select>
+
+    <select id="getByMap" parameterType="java.util.Map" resultMap="ResultMapStudent">
+        select <include refid="Student_field"></include> from student
+        <where>
+            <include refid="Student_where"></include>
+        </where>
+    </select>
+    <select id="getByEntity" parameterType="Student" resultMap="ResultMapStudent">
+        select <include refid="Student_field"></include> from student
+        <where>
+            <include refid="Student_where"></include>
+        </where>
+    </select>
+
+    <select id="findByMap" parameterType="java.util.Map" resultMap="ResultMapStudent">
+        select <include refid="Student_field"></include> from student
+        <where>
+            <include refid="Student_where"></include>
+        </where>
+    </select>
+
+    <select id="findByEntity" parameterType="Student" resultMap="ResultMapStudent">
+        select <include refid="Student_field"></include> from student
+        <where>
+            <include refid="Student_where"></include>
+        </where>
+    </select>
+
+    <!--            批量插入-->
+    <insert id="insertBatch" parameterType="java.util.List" useGeneratedKeys="false">
+        insert into student values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.id},#{item.username},#{item.password},#{item.sex},#{item.phone},
+            #{item.nation},#{item.nativePlace},#{item.cId},
+            #{item.gId},#{item.dpId},#{item.tId})
+        </foreach>
+    </insert>
+    <!--            批量更新-->
+    <update id="updateBatch" parameterType="java.util.List" >
+        <foreach collection="list" item="item" index="index" separator=";">
+            update student
+            <set>
+                <if test="item.username != null and item.username !=''">s_username=#{item.username},</if>
+                <if test="item.password != null and item.password !=''">s_password=#{item.password},</if>
+                <if test="item.sex != null and item.sex !=''">s_sex=#{item.sex},</if>
+                <if test="item.phone != null and item.phone !=''">s_phone=#{item.phone},</if>
+                <if test="item.nation != null and item.nation !=''">s_nation=#{item.nation},</if>
+                <if test="item.nativePlace != null and item.nativePlace !=''">s_nativePlace=#{item.nativePlace},</if>
+                <if test="item.cId != null and item.cId !=''">s_cId=#{item.cId},</if>
+                <if test="item.gId != null and item.gId !=''">s_gId=#{item.gId},</if>
+                <if test="item.dpId != null and item.dpId !=''">s_dpId=#{item.dpId},</if>
+                <if test="item.tId != null and item.tId !=''">s_tId=#{item.tId},</if>
+            </set>
+            <where>
+                <if test="item.id != null and item.id !=''">s_id=#{item.id},</if>
+            </where>
+        </foreach>
+    </update>
+
+    <!--            执行sql语句-->
+    <select id="getBySqlReturnMap" resultType="java.util.Map">
+                ${sql}
+            </select>
+
+    <select id="getBySqlReturnEntity" resultMap="ResultMapStudent">
+                    ${sql}
+            </select>
+
+    <select id="listBySqlReturnMap" resultType="java.util.Map">
+                ${sql}
+            </select>
+
+    <select id="listBySqlReturnEntity" resultMap="ResultMapStudent">
+                ${sql}
+            </select>
+
+    <select id="findBySqlRerturnEntity" resultMap="ResultMapStudent">
+                    ${sql}
+            </select>
+
+    <update id="updateBysql">
+                ${sql}
+            </update>
+
+    <delete id="deleteBySql">
+                ${sql}
+            </delete>
+
+</mapper>

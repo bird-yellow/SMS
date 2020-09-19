@@ -160,7 +160,7 @@
                     ${sql}
             </select>
 
-            <update id="findBySqlRerturnEntity">
+            <update id="updateBysql">
                 ${sql}
             </update>
 
