@@ -1,6 +1,7 @@
 package com.sun.Controller;
 
 import com.sun.Base.BaseController;
+import com.sun.Common.LogAnno;
 import com.sun.Entity.LoginForm;
 import com.sun.Entity.Manage;
 import com.sun.Entity.Student;
@@ -27,6 +28,7 @@ public class LoginController extends BaseController {
     private TeacherService teacherService;
     @Autowired
     private ManageService manageService;
+
 
     @RequestMapping("/uLogin")
     public String uLogin(){
@@ -55,36 +57,52 @@ public class LoginController extends BaseController {
                     Student student = studentService.getByEntity(tmp);
                     if(student != null){
                         HttpSession session = request.getSession();
-                        session.setAttribute(Consts.STUDENT,student);
+                        session.setAttribute(Consts.USER,student);
+                        session.setAttribute(Consts.USERNAME,student.getUsername());
                         session.setAttribute(Consts.USERTYPE,1);
                         model.addAttribute("obj",student);
                         return "login/sIndex";
                     }
-                        break;
+                    else{
+                        return "redirect:/login/uLogin";
+                    }
                 case 2:
                     Teacher temp = new Teacher(loginForm.getUsername(),loginForm.getPassword());
                         Teacher teacher = teacherService.getByEntity(temp);
                         if(!isEmpty(teacher)){
                                 HttpSession session = request.getSession();
                                 session.setAttribute(Consts.USERTYPE,2);
-                                session.setAttribute(Consts.TEACHER,teacher);
+                                session.setAttribute(Consts.USER,teacher);
+                                session.setAttribute(Consts.USERNAME,teacher.getUsername());
                                 model.addAttribute("obj",teacher);
                                 return "login/tIndex";
                         }
-                        break;
+                        else{
+                            return "redirect:/login/uLogin";
+                        }
                 case 3:
                     Manage temp2 = new Manage(loginForm.getUsername(),loginForm.getPassword());
                     Manage manage =  manageService.getByEntity(temp2);
                     if(!isEmpty(manage)){
                             HttpSession session = request.getSession();
                             session.setAttribute(Consts.USERTYPE,3);
-                            session.setAttribute(Consts.MANAGE,manage);
+                            session.setAttribute(Consts.USERNAME,manage.getUsername());
+                            session.setAttribute(Consts.USER,manage);
                             model.addAttribute("obj",manage);
                             return "login/mIndex";
                     }
-                    break;
+                    else{
+                        return "redirect:/login/uLogin";
+                    }
             }
             return  null;
+    }
+
+    @LogAnno(value = "退出")
+    @RequestMapping("/logout")
+    public  String  logout(HttpServletRequest request){
+            request.getSession().invalidate();
+            return "redirect:/login/uLogin.action";
     }
 
 }

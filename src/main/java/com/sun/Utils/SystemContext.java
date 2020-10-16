@@ -1,4 +1,8 @@
 package com.sun.Utils;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 /**
  * 用来传递列表对象的ThreadLocal数据
  * @author Administrator
@@ -23,6 +27,7 @@ public class SystemContext {
 	private static ThreadLocal<String> order = new ThreadLocal<String>();
 	
 	private static ThreadLocal<String> realPath = new ThreadLocal<String>();
+
 	
 	
 	
@@ -76,5 +81,7 @@ public class SystemContext {
 	public static void removeRealPath() {
 		realPath.remove();
 	}
+
+
 	
 }

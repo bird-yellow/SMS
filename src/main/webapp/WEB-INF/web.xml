@@ -6,7 +6,7 @@
   <display-name>Archetype Created Web Application</display-name>
     <context-param>
       <param-name>contextConfigLocation</param-name>
-      <param-value>classpath:applicationContext.xml</param-value>
+      <param-value>classpath:application*.xml</param-value>
     </context-param>
     <listener>
       <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
@@ -65,6 +65,29 @@
     </servlet-mapping>
 
 
-<!--    配置拦截器-->
+<!--  配置SystemContext过滤器-->
+    <filter>
+      <filter-name>SystemContextFilter</filter-name>
+      <filter-class>com.sun.Filter.SystemContextFilter</filter-class>
+      <init-param>
+        <param-name>pageSize</param-name>
+        <param-value>8</param-value>
+      </init-param>
+    </filter>
+    <filter-mapping>
+      <filter-name>SystemContextFilter</filter-name>
+      <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+
+<!--  配置httpFilter;存储httpRequest,HttpServelt -->
+    <filter>
+      <filter-name>HttpContext</filter-name>
+      <filter-class>com.sun.Filter.HttpFilter</filter-class>
+    </filter>
+  <filter-mapping>
+    <filter-name>HttpContext</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
 
 </web-app>

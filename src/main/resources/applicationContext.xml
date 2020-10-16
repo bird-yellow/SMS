@@ -18,26 +18,25 @@
     <context:property-placeholder location="classpath:c3p0.properties"/>
 
     <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
-        <!-- 数据库驱动 -->
+ 
         <property name="driverClass" value="${c3p0.driverClass}"/>
-        <!-- 连接数据库的url -->
+ 
         <property name="jdbcUrl" value="${c3p0.jdbcUrl}"/>
-        <!-- 连接数据库的用户名 -->
+  
         <property name="user" value="${c3p0.user}"/>
-        <!-- 连接数据库的密码 -->
+    
         <property name="password" value="${c3p0.password}"/>
-        <!-- 初始化连接数 -->
+  
         <property name="initialPoolSize" value="${c3p0.initialPoolSize}"/>
-        <!-- 最大连接数 -->
+
         <property name="maxPoolSize" value="${c3p0.maxPoolSize}"/>
-        <!-- 最小连接数 -->
+    
         <property name="minPoolSize" value="${c3p0.minPoolSize}"/>
-        <!-- 连接的生存时间 -->
         <property name="maxIdleTime" value="${c3p0.maxIdleTime}"/>
     </bean>
 
 <!--    使用annotation注解方式配置事务-->
-    <tx:annotation-driven transaction-manager="transactionManager"/>
+    <tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true"/>
     <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
         <property name="dataSource" ref="dataSource"/>
     </bean>
@@ -47,15 +46,6 @@
         <property name="dataSource" ref="dataSource"/>
         <property name="mapperLocations" value="classpath:mapper/*.xml"/>
         <property name="configLocation" value="classpath:mybatis-conf.xml"/>
-        <property name="plugins">
-            <array>
-                <bean class="com.github.pagehelper.PageInterceptor">
-                    <property name="properties">
-                        <value>helperDialct=mysql</value>
-                    </property>
-                </bean>
-            </array>
-        </property>
     </bean>
 
 
@@ -74,9 +64,9 @@
         </tx:attributes>
     </tx:advice>
 
-<!--    配置AOP切面-->
+<!--    配置事务AOP切面-->
     <aop:config>
-        <aop:pointcut expression="execution(* com.sun.Service.*.*(..))"
+        <aop:pointcut expression="execution(* com.sun.Service.Impl.*.*(..))"
                       id="transactionPointcut" />
         <aop:advisor pointcut-ref="transactionPointcut" advice-ref="txAdvice"  />
     </aop:config>
@@ -86,6 +76,11 @@
         <property name="basePackage" value="com.sun.Dao"/>
     </bean>
 
-    <context:component-scan base-package="com.sun.Service"/>
+    <context:component-scan base-package="com.sun.Common"/>
 
+
+    <aop:aspectj-autoproxy/>
+
+    <context:component-scan base-package="com.sun.Service"/>
+    <context:component-scan base-package="com.sun.Mail"/>
 </beans>

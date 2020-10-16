@@ -17,4 +17,9 @@ public class StudentServiceImpl extends BaseServiceImpl<Student> implements Stud
     public BaseDao<Student> getBaseDao() {
         return studentDao;
     }
+
+    @Override
+    public void deleteByClazzId(Integer id) {
+            studentDao.deleteByClazzId(id);
+    }
 }

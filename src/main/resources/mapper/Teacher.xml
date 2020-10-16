@@ -7,6 +7,7 @@
         <result property="username" column="t_username" jdbcType="VARCHAR"/>
         <result property="password" column="t_password" jdbcType="VARCHAR"/>
         <result property="phone" column="t_phone" jdbcType="VARCHAR"/>
+        <result property="email" column="t_email" jdbcType="VARCHAR"/>
         <result property="cId" column="t_cId" jdbcType="INTEGER"/>
         <result property="gId" column="t_gId" jdbcType="INTEGER"/>
         <result property="dpId" column="t_dpId" jdbcType="INTEGER"/>
@@ -18,28 +19,30 @@
     </resultMap>
 
     <sql id="Teacher_field">
-                    t_id,t_username,t_password,t_phone,t_cId,t_gId,t_dpId,t_crId
-            </sql>
+                    t_id,t_username,t_password,t_phone,t_email,t_cId,t_gId,t_dpId,t_crId
+           </sql>
 
     <sql id="Teacher_insert">
-                    #{id},#{username},#{password},#{phone},#{cId},#{gId},#{dpId},#{crId}
+                    #{id},#{username},#{password},#{phone},#{email},#{cId},#{gId},#{dpId},#{crId}
     </sql>
 
     <sql id="Teacher_where">
         <if test="id != null and id !=''">and t_id=#{id}</if>
-        <if test="username != null and username !=''">and t_username=#{t_username}</if>
-        <if test="password != null and password !=''">and password=#{t_password}</if>
-        <if test="phone != null and phone != null">and phone=#{t_phone}</if>
-        <if test="cId != null and cId !=''">and cId=#{t_cId}</if>
-        <if test="gId != null and gId !=''">and gId=#{t_gId}</if>
-        <if test="dpId != null and dpId !=''">and dpId=#{t_dpId}</if>
-        <if test="crId != null and crId !=''">and crId=#{t_crId}</if>
+        <if test="username != null and username !=''">and t_username=#{username}</if>
+        <if test="password != null and password !=''">and t_password=#{password}</if>
+        <if test="phone != null and phone != ''">and t_phone=#{phone}</if>
+        <if test="email != null and email !=''">and t_email=#{email}</if>
+        <if test="cId != null and cId !=''">and t_cId=#{cId}</if>
+        <if test="gId != null and gId !=''">and t_gId=#{gId}</if>
+        <if test="dpId != null and dpId !=''">and t_dpId=#{dpId}</if>
+        <if test="crId != null and crId !=''">and t_crId=#{crId}</if>
     </sql>
 
     <sql id="Teacher_update">
         <if test="username != null and username !=''">t_username=#{username},</if>
         <if test="password != null and password !=''">t_password=#{password},</if>
         <if test="phone != null and phone !=''">t_phone=#{phone},</if>
+        <if test="email != null and email !=''">t_email=#{email},</if>
         <if test="cId != null and cId !=''">t_cId=#{cId},</if>
         <if test="gId != null and gId !=''">t_gId=#{gId},</if>
         <if test="dpId != null and dpId !=''">t_dpId=#{dpId},</if>
@@ -47,13 +50,15 @@
     </sql>
 
     <insert id="insert" parameterType="Teacher">
-        insert <include refid="Teacher_field"></include> from teacher
+            insert into teacher values (<include refid="Teacher_insert"></include>)
     </insert>
 
+<!--    删除学生信息,删除教师信息.左连接:如果没有学生,依然会删除教师-->
     <delete id="deleteById" parameterType="java.lang.Integer">
-                delete  from teacher
-                where  t_id=#{id}
-            </delete>
+                delete  t,s from teacher t left join student s
+                on  t.t_id = s.s_tId
+                where t.t_id=#{id}
+    </delete>
 
     <delete id="deleteByEntity" parameterType="Teacher">
         delete from teacher
@@ -105,12 +110,12 @@
         </where>
     </select>
 
-    <select id="load" parameterType="java.lang.Integer">
+    <select id="load" parameterType="java.lang.Integer" resultMap="ResultMapTeacher">
         select <include refid="Teacher_field"></include> from teacher
         where t_id=#{id}
     </select>
 
-    <select id="getById" parameterType="java.lang.Integer">
+    <select id="getById" parameterType="java.lang.Integer" resultMap="ResultMapTeacher">
         select <include refid="Teacher_field"></include> from teacher
         where t_id=#{id}
     </select>
@@ -146,7 +151,7 @@
     <insert id="insertBatch" parameterType="java.util.List" useGeneratedKeys="false">
         insert into teacher values
         <foreach collection="list" item="item" index="index" separator=",">
-            (#{item.id},#{item.username},#{item.password},#{item.phone},#{item.cId},
+            (#{item.id},#{item.username},#{item.password},#{item.phone},,#{item.email},#{item.cId},
             #{item.gId},#{item.dpId},#{item.crId})
         </foreach>
     </insert>
@@ -158,6 +163,7 @@
                 <if test="item.username != null and item.username !=''">t_username=#{item.username},</if>
                 <if test="item.password != null and item.password !=''">t_password=#{item.password},</if>
                 <if test="item.phone != null and item.phone !=''">t_phone=#{item.phone},</if>
+                <if test="item.email != null and item.email !=''">t_email=#{item.email},</if>
                 <if test="item.cId != null and item.cId !=''">t_cId=#{item.cId},</if>
                 <if test="item.gId != null and item.gId !=''">t_gId=#{item.gId},</if>
                 <if test="item.dpId != null and item.dpId !=''">t_dpId=#{item.dpId},</if>

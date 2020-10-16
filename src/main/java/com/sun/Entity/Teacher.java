@@ -4,19 +4,23 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 //定义老师
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Teacher {
+public class Teacher implements Serializable    {
         private  Integer id;
         private  String username;
         private  String password;
         private String phone;
+        private String email;
         private  Integer cId;
         private  Integer gId;
         private  Integer dpId;
         private  Integer crId;
+
 //        定义班级
         private Clazz clazz;
 //        定义年级

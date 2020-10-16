@@ -18,4 +18,6 @@ public class ClazzServiceImpl extends BaseServiceImpl<Clazz> implements ClazzSer
     public BaseDao<Clazz> getBaseDao() {
         return clazzDao;
     }
+
+
 }

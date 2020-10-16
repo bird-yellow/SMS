@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sun.Dao.LogDao">
+    <resultMap id="ResultMapLog" type="com.sun.Entity.Log">
+        <id property="id" column="l_id" jdbcType="INTEGER"/>
+        <result property="username" column="l_username" jdbcType="VARCHAR"/>
+        <result property="operator" column="l_operator" jdbcType="VARCHAR"/>
+        <result property="time" column="l_time" jdbcType="VARCHAR"/>
+        <result property="result" column="l_result" jdbcType="VARCHAR"/>
+        <result property="ip" column="l_ip" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Log_field">
+                    l_id,l_username,l_operator,l_time,l_result,l_ip
+            </sql>
+
+    <sql id="Log_insert">
+                    #{id},#{username},#{operator},#{time},#{result},#{ip}
+            </sql>
+
+    <sql id="Log_where">
+        <if test="id != null and id !=''">and l_id=#{id}</if>
+        <if test="username != null and username !=''">and l_username=#{username}</if>
+        <if test="operator != null and operator !=''">and l_operator=#{operator}</if>
+        <if test="time != null and time !=''">and l_time=#{time}</if>
+        <if test="result != null and result !=''">and l_result=#{result}</if>
+        <if test="ip != null and ip !=''">and l_ip=#{ip}</if>
+    </sql>
+
+    <sql id="Log_update">
+        <if test="username != null and username !=''">l_username=#{username},</if>
+        <if test="operator != null and operator !=''">l_operator=#{operator},</if>
+        <if test="time != null and time !=''">l_time=#{time},</if>
+        <if test="result != null and result !=''">l_result=#{result},</if>
+        <if test="ip != null and ip !=''">l_ip=#{ip},</if>
+    </sql>
+
+    <insert id="insert" parameterType="com.sun.Entity.Log" useGeneratedKeys="true" keyColumn="l_id">
+        insert  into log values (<include refid="Log_insert"></include>)
+    </insert>
+
+    <delete id="deleteById" parameterType="java.lang.Integer">
+                delete  from log
+                where  l_id=#{id}
+            </delete>
+
+    <delete id="deleteByEntity" parameterType="com.sun.Entity.Log">
+        delete from log
+        <where>
+            <include refid="Log_where"></include>
+        </where>
+    </delete>
+
+<!--    按照日期删除日志-->
+    <delete id="clear" parameterType="java.lang.Integer">
+            delete from log
+            where to_days(curdate()) - to_days(l_time) &gt;=  ${value}
+    </delete>
+
+    <delete id="deleteByMap" parameterType="java.util.Map">
+        delete from log
+        <where>
+            <include refid="Log_where"></include>
+        </where>
+    </delete>
+
+    <update id="update" parameterType="com.sun.Entity.Log">
+        update log
+        <set>
+            <include refid="Log_update"></include>
+        </set>
+        <where>
+            <include refid="Log_where"></include>
+        </where>
+    </update>
+
+    <update id="updateById" parameterType="com.sun.Entity.Log">
+        update log
+        <set>
+            <include refid="Log_update"></include>
+        </set>
+        where l_id=#{id}
+    </update>
+
+    <select id="listByMap" parameterType="java.util.Map" resultMap="ResultMapLog">
+        select <include refid="Log_field"></include> from log
+        <where>
+            <include refid="Log_where"></include>
+        </where>
+    </select>
+
+    <select id="listAll" resultMap="ResultMapLog">
+        select <include refid="Log_field"></include> from log
+    </select>
+
+    <select id="listAllByEntity" parameterType="Log" resultMap="ResultMapLog">
+        select <include refid="Log_field"></include> from log
+        <where>
+            <include refid="Log_where"></include>
+        </where>
+    </select>
+
+    <select id="load" parameterType="java.lang.Integer" resultMap="ResultMapLog">
+        select <include refid="Log_field"></include> from log
+        where l_id=#{id}
+    </select>
+
+    <select id="getById" parameterType="java.lang.Integer" resultMap="ResultMapLog">
+        select <include refid="Log_field"></include> from log
+        where l_id=#{id}
+    </select>
+
+    <select id="getByMap" parameterType="java.util.Map" resultMap="ResultMapLog">
+        select <include refid="Log_field"></include> from log
+        <where>
+            <include refid="Log_where"></include>
+        </where>
+    </select>
+    <select id="getByEntity" parameterType="com.sun.Entity.Log" resultMap="ResultMapLog">
+        select <include refid="Log_field"></include> from log
+        <where>
+            <include refid="Log_where"></include>
+        </where>
+    </select>
+
+    <select id="findByMap" parameterType="java.util.Map" resultMap="ResultMapLog">
+        select <include refid="Log_field"></include> from log
+        <where>
+            <include refid="Log_where"></include>
+        </where>
+    </select>
+
+    <select id="findByEntity" parameterType="com.sun.Entity.Log" resultMap="ResultMapLog">
+        select <include refid="Log_field"></include> from log
+        <where>
+            <include refid="Log_where"></include>
+        </where>
+    </select>
+
+    <!--            批量插入-->
+    <insert id="insertBatch" parameterType="java.util.List" useGeneratedKeys="false">
+        insert into log values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.id},#{item.username},#{item.operator},#{item.time},#{item.result},#{item.ip})
+        </foreach>
+    </insert>
+    <!--            批量更新-->
+    <update id="updateBatch" parameterType="java.util.List" >
+        <foreach collection="list" item="item" index="index" separator=";">
+            update log
+            <set>
+                <if test="item.username != null and item.username !=''">l_username=#{item.username},</if>
+                <if test="item.operator != null and item.operator !=''">l_operator=#{item.operator},</if>
+                <if test="item.time != null and item.time !=''">l_time=#{item.time},</if>
+                <if test="item.result != null and item.result !=''">l_result=#{item.result},</if>
+                <if test="item.ip != null and item.ip !=''">l_ip=#{item.ip},</if>
+            </set>
+            <where>
+                <if test="item.id != null and item.id !=''">l_id=#{item.id},</if>
+            </where>
+        </foreach>
+    </update>
+
+    <!--            执行sql语句-->
+    <select id="getBySqlReturnMap" resultType="java.util.Map">
+                ${sql}
+            </select>
+
+    <select id="getBySqlReturnEntity" resultMap="ResultMapLog">
+                    ${sql}
+            </select>
+
+    <select id="listBySqlReturnMap" resultType="java.util.Map">
+                ${sql}
+            </select>
+
+    <select id="listBySqlReturnEntity" resultMap="ResultMapLog">
+                ${sql}
+            </select>
+
+    <select id="findBySqlRerturnEntity" resultMap="ResultMapLog">
+                    ${sql}
+            </select>
+
+    <update id="updateBysql">
+                ${sql}
+            </update>
+
+    <delete id="deleteBySql">
+                ${sql}
+            </delete>
+
+</mapper>

@@ -6,28 +6,31 @@
         <id property="id" column="m_id" jdbcType="INTEGER"/>
         <result property="username" column="m_username" jdbcType="VARCHAR"/>
         <result property="password" column="m_password" jdbcType="VARCHAR"/>
+        <result property="email" column="m_email" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="Manage_field">
-                    m_id,m_username,m_password
+                    m_id,m_username,m_password,m_email
             </sql>
 
     <sql id="Manage_insert">
-                    #{id},#{username},#{password}
+                    #{id},#{username},#{password},#{email}
             </sql>
     <sql id="Manage_where">
         <if test="id != null and id !=''">and m_id=#{id}</if>
         <if test="username != null and username !=''">and m_username=#{username}</if>
         <if test="password != null and password !=''">and m_password=#{password}</if>
+        <if test="email != null and email !=''">and m_email=#{email}</if>
     </sql>
 
     <sql id="Manage_update">
         <if test="username != null and username !=''">m_username=#{username},</if>
         <if test="password != null and password !=''">m_password=#{password},</if>
+        <if test="email != null and email !=''">m_email=#{email},</if>
     </sql>
 
-    <insert id="insert" parameterType="Manage">
-        insert <include refid="Manage_field"></include> from manage
+    <insert id="insert" parameterType="Manage" useGeneratedKeys="true" keyColumn="m_id">
+            insert into manage values (<include refid="Manage_insert"></include>)
     </insert>
 
     <delete id="deleteById" parameterType="java.lang.Integer">
@@ -85,12 +88,12 @@
         </where>
     </select>
 
-    <select id="load" parameterType="java.lang.Integer">
+    <select id="load" parameterType="java.lang.Integer" resultMap="ResultMapManage">
         select <include refid="Manage_field"></include> from manage
         where m_id=#{id}
     </select>
 
-    <select id="getById" parameterType="java.lang.Integer">
+    <select id="getById" parameterType="java.lang.Integer" resultMap="ResultMapManage">
         select <include refid="Manage_field"></include> from manage
         where m_id=#{id}
     </select>
@@ -126,7 +129,7 @@
     <insert id="insertBatch" parameterType="java.util.List" useGeneratedKeys="false">
         insert into manage values
         <foreach collection="list" item="item" index="index" separator=",">
-            (#{item.id},#{item.username},#{item.password})
+            (#{item.id},#{item.username},#{item.password},#{item.email})
         </foreach>
     </insert>
     <!--            批量更新-->
@@ -136,6 +139,7 @@
             <set>
                 <if test="item.name != null and item.name !=''">m_username=#{item.username},</if>
                 <if test="item.password != null and item.password!=''">m_password=#{item.password},</if>
+                <if test="item.email != null and item.email !=''">m_email=#{item.email},</if>
             </set>
             <where>
                 <if test="item.id != null and item.id !=''">m_id=#{item.id},</if>

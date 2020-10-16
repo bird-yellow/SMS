@@ -6,7 +6,7 @@
 <html>
 <head>
     <meta http-equiv="refresh" content="0;url=/login/uLogin">
-    <title>SB Admin</title>
+    <title>Admin</title>
 </head>
 
 <body>

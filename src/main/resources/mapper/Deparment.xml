@@ -24,13 +24,15 @@
     </sql>
 
     <insert id="insert" parameterType="Deparment">
-        insert <include refid="Deparment_field"></include> from deparment
+        insert  into deparment values (<include refid="Deparment_insert"></include>)
     </insert>
 
+<!--    5章表删除-->
     <delete id="deleteById" parameterType="java.lang.Integer">
-                delete  from deparment
-                where  dp_id=#{id}
-            </delete>
+        delete  d,g,c,t,s from (deparment d left join grade g on d.dp_id = g.g_dpId ) left join  clazz c on d.dp_id = c.c_dpId
+         left join teacher t on d.dp_id = t.t_dpId left join student s on d.dp_id = s.s_dpId
+         where d.dp_id=#{id}
+    </delete>
 
     <delete id="deleteByEntity" parameterType="Deparment">
         delete from deparment
@@ -82,12 +84,12 @@
         </where>
     </select>
 
-    <select id="load" parameterType="java.lang.Integer">
+    <select id="load" parameterType="java.lang.Integer" resultMap="ResultMapDeparment">
         select <include refid="Deparment_field"></include> from deparment
         where dp_id=#{id}
     </select>
 
-    <select id="getById" parameterType="java.lang.Integer">
+    <select id="getById" parameterType="java.lang.Integer" resultMap="ResultMapDeparment">
         select <include refid="Deparment_field"></include> from deparment
         where dp_id=#{id}
     </select>

@@ -7,21 +7,24 @@
         <result property="name" column="cr_name" jdbcType="VARCHAR"/>
         <result property="time" column="cr_time" jdbcType="VARCHAR"/>
         <result property="sid" column="cr_sId" jdbcType="INTEGER"/>
+        <result property="dpId" column="cr_dpId" jdbcType="INTEGER"/>
         <result property="score" column="cr_score" jdbcType="INTEGER"/>
+        <association property="deparment" column="cr_dpId" select="com.sun.Dao.DeparmentDao.load"/>
     </resultMap>
 
     <sql id="Course_field">
-                    cr_id,cr_name,cr_time,cr_sId,cr_score
-            </sql>
+                    cr_id,cr_name,cr_time,cr_sId,cr_dpId,cr_score
+    </sql>
 
     <sql id="Course_insert">
-                    #{id},#{name},#{time},#{sid},#{score}
+                    #{id},#{name},#{time},#{sid},#{dpId},#{score}
             </sql>
     <sql id="Course_where">
         <if test="id != null and id !=''">and cr_id=#{id}</if>
         <if test="name != null and name !=''">and cr_name=#{name}</if>
         <if test="time != null and time !=''">and cr_time=#{time}</if>
         <if test="sid != null and sid !=''">and cr_sId=#{sid}</if>
+        <if test="dpId != null and dpId !=''">and cr_dpId =#{dpId}</if>
         <if test="score != null and score !=''">and cr_score=#{score}</if>
     </sql>
 
@@ -29,11 +32,12 @@
         <if test="name != null and name !=''">cr_name=#{name},</if>
         <if test="time != null and time !=''">cr_time=#{time},</if>
         <if test="sid != null and sid !=''">cr_sId=#{sid},</if>
+        <if test="dpId != null and dpId !=''">cr_dpId=#{dpId},</if>
         <if test="score != null and score !=''">cr_score=#{score},</if>
     </sql>
 
-    <insert id="insert" parameterType="Course">
-        insert <include refid="Course_field"></include> from course
+    <insert id="insert" parameterType="Course" useGeneratedKeys="true" keyColumn="cr_id">
+        insert into course values (<include refid="Course_insert"></include>)
     </insert>
 
     <delete id="deleteById" parameterType="java.lang.Integer">
@@ -83,7 +87,7 @@
 <!--    根据学生id 查找课程-->
     <select id="ListByCourseId" parameterType="java.lang.Integer" resultMap="ResultMapCourse">
         select <include refid="Course_field"></include> from course
-        where  sid=#{sid}
+        where  cr_sid=#{sid}
     </select>
 
     <select id="listAll" resultMap="ResultMapCourse">
@@ -97,12 +101,12 @@
         </where>
     </select>
 
-    <select id="load" parameterType="java.lang.Integer">
+    <select id="load" parameterType="java.lang.Integer" resultMap="ResultMapCourse">
         select <include refid="Course_field"></include> from course
         where cr_id=#{id}
     </select>
 
-    <select id="getById" parameterType="java.lang.Integer">
+    <select id="getById" parameterType="java.lang.Integer" resultMap="ResultMapCourse">
         select <include refid="Course_field"></include> from course
         where cr_id=#{id}
     </select>
@@ -139,9 +143,10 @@
     <insert id="insertBatch" parameterType="java.util.List" useGeneratedKeys="false">
         insert into course values
         <foreach collection="list" item="item" index="index" separator=",">
-            (#{item.id},#{item.name},#{item.time},#{item.sid},#{item.score})
+            (#{item.id},#{item.name},#{item.time},#{item.sid},#{item.dpId},#{item.score})
         </foreach>
     </insert>
+
     <!--            批量更新-->
     <update id="updateBatch" parameterType="java.util.List" >
         <foreach collection="list" item="item" index="index" separator=";">
@@ -150,6 +155,7 @@
                 <if test="item.name != null and item.name !=''">cr_name=#{item.name},</if>
                 <if test="item.time != null and item.time !=''">cr_time=#{item.time},</if>
                 <if test="item.sid != null and item.sid !=''">cr_sId=#{item.sid},</if>
+                <if test="item.dpId != null and item.dpId !=''">cr_dpId=#{item.dpId},</if>
                 <if test="item.score != null and item.score !=''">cr_score=#{item.score}</if>
             </set>
             <where>

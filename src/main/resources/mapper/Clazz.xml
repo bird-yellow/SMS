@@ -5,31 +5,39 @@
             <resultMap id="ResultMapClazz" type="com.sun.Entity.Clazz">
                     <id property="id" column="c_id" jdbcType="INTEGER"/>
                     <result property="name" column="c_name" jdbcType="VARCHAR"/>
+                    <result property="gId" column="c_gId" jdbcType="INTEGER"/>
+                    <result property="dpId" column="c_dpId" jdbcType="INTEGER" />
+                    <association property="grade" column="c_gId"  select="com.sun.Dao.GradeDao.load"/>
+                    <association property="deparment" column="c_dpId"   select="com.sun.Dao.DeparmentDao.load"/>
             </resultMap>
 
             <sql id="Clazz_field">
-                    c_id,c_name
+                    c_id,c_name,c_gId,c_dpId
             </sql>
 
             <sql id="Clazz_insert">
-                    #{id},#{name}
+                    #{id},#{name},#{gId},#{dpId}
             </sql>
             <sql id="Clazz_where">
                 <if test="id != null and id !=''">and c_id=#{id}</if>
                 <if test="name != null and name !=''">and c_name=#{name}</if>
+                <if test="gId != null and gId !=''">and c_gId=#{gId}</if>
+                <if test="dpId != null and dpId !=''">and c_dpId=#{dpId}</if>
             </sql>
 
             <sql id="Clazz_update">
                     <if test="name != null and name !=''">c_name=#{name},</if>
+                    <if test="dpId != null and dpId !=''">c_dpId=#{dpId},</if>
+                    <if test="gId != null and gId !=''">c_gId=#{gId},</if>
             </sql>
 
-            <insert id="insert" parameterType="Clazz">
-                    insert <include refid="Clazz_field"></include> from clazz
+            <insert id="insert" parameterType="Clazz" useGeneratedKeys="true" keyColumn="c_id">
+                    insert into clazz values (<include refid="Clazz_insert"></include>)
             </insert>
 
             <delete id="deleteById" parameterType="java.lang.Integer">
-                delete  from clazz
-                where  c_id=#{id}
+                delete t,s,c from (clazz c left join teacher t on c.c_id = t.t_cId ) left join student s on c.c_id = s.s_cId
+                where c.c_id=#{id};
             </delete>
 
             <delete id="deleteByEntity" parameterType="Clazz">
@@ -82,7 +90,7 @@
                     </where>
             </select>
 
-            <select id="load" parameterType="java.lang.Integer">
+            <select id="load" parameterType="java.lang.Integer"  resultMap="ResultMapClazz">
                     select <include refid="Clazz_field"></include> from clazz
                     where c_id=#{id}
             </select>
@@ -119,19 +127,20 @@
                 </where>
             </select>
 
-<!--            批量插入-->
             <insert id="insertBatch" parameterType="java.util.List" useGeneratedKeys="false">
                 insert into clazz values
                 <foreach collection="list" item="item" index="index" separator=",">
-                        (#{item.id},#{item.name})
+                        (#{item.id},#{item.name},#{item.gId},#{item.dpId})
                 </foreach>
             </insert>
-<!--            批量更新-->
+
             <update id="updateBatch" parameterType="java.util.List" >
                      <foreach collection="list" item="item" index="index" separator=";">
                             update clazz
                             <set>
                                     <if test="item.name != null and item.name !=''">c_name=#{item.name},</if>
+                                    <if test="item.gId != null and item.gId !=">c_gId=#{item.gId},</if>
+                                    <if test="item.dpId != null and item.dpId !=''">c_dpId=#{item.dpId},</if>
                             </set>
                             <where>
                                     <if test="item.id != null and item.id !=''">c_id=#{item.id},</if>
@@ -139,8 +148,7 @@
                      </foreach>
             </update>
 
-<!--            执行sql语句-->
-            <select id="getBySqlReturnMap" resultType="java.util.Map">
+            <select id="getBySqlReturnMap" resultType="java.util.Map" resultMap="ResultMapClazz">
                 ${sql}
             </select>
 

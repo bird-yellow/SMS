@@ -132,7 +132,7 @@ public abstract  class BaseServiceImpl<T> implements BaseService<T>{
     	Integer pageSize = SystemContext.getPageSize();
 		Integer pageOffset = SystemContext.getPageOffset();
 		if(pageOffset==null||pageOffset<0) pageOffset = 0;
-		if(pageSize==null||pageSize<0) pageSize = 15;
+		if(pageSize==null||pageSize<0) pageSize = 8;
 		String order = SystemContext.getOrder();
 		String sort = SystemContext.getSort();
 		Integer pageNum = null;
@@ -158,7 +158,7 @@ public abstract  class BaseServiceImpl<T> implements BaseService<T>{
     	Integer pageSize = SystemContext.getPageSize();
 		Integer pageOffset = SystemContext.getPageOffset();
 		if(pageOffset==null||pageOffset<0) pageOffset = 0;
-		if(pageSize==null||pageSize<0) pageSize = 15;
+		if(pageSize==null||pageSize<0) pageSize = 8;
 		String order = SystemContext.getOrder();
 		String sort = SystemContext.getSort();
 		Integer pageNum = null;
@@ -239,7 +239,7 @@ public abstract  class BaseServiceImpl<T> implements BaseService<T>{
     	Integer pageSize = SystemContext.getPageSize();
 		Integer pageOffset = SystemContext.getPageOffset();
 		if(pageOffset==null||pageOffset<0) pageOffset = 0;
-		if(pageSize==null||pageSize<0) pageSize = 15;
+		if(pageSize==null||pageSize<0) pageSize = 8;
 		String order = SystemContext.getOrder();
 		String sort = SystemContext.getSort();
 		Integer pageNum = null;

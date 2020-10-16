@@ -10,39 +10,41 @@
         <result property="phone" column="s_phone" jdbcType="VARCHAR"/>
         <result property="nation" column="s_nation" jdbcType="VARCHAR"/>
         <result property="nativePlace" column="s_nativePlace" jdbcType="VARCHAR"/>
+        <result property="email" column="s_email" jdbcType="VARCHAR"/>
         <result property="cId" column="s_cId" jdbcType="INTEGER"/>
         <result property="gId" column="s_gId" jdbcType="INTEGER"/>
-        <result property="dpId" column="s_dpId" jdbcType="INTEGER"/>
         <result property="tId" column="s_tId" jdbcType="INTEGER"/>
+        <result property="dpId" column="s_dpId" jdbcType="INTEGER"/>
         <association property="clazz" column="s_cId" select="com.sun.Dao.ClazzDao.load"/>
         <association property="grade" column="s_gId" select="com.sun.Dao.GradeDao.load"/>
-        <association property="deparment" column="s_dpId" select="com.sun.Dao.DeparmentDao.load"/>
         <association property="teacher" column="s_tId" select="com.sun.Dao.TeacherDao.load"/>
+        <association property="deparment" column="s_dpId" select="com.sun.Dao.DeparmentDao.load"/>
         <collection property="courseList" ofType="com.sun.Entity.Course" column="s_id" select="com.sun.Dao.CourseDao.ListByCourseId"/>
     </resultMap>
 
     <sql id="Student_field">
-                    s_id,s_username,s_password,s_sex,s_phone,s_nation,s_nativePlace,
-                    s_cId,s_gId,s_dpId,s_tId
-            </sql>
+                    s_id,s_username,s_password,s_sex,s_phone,s_nation,s_nativePlace,s_email,
+                    s_cId,s_gId,s_tId,s_dpId
+    </sql>
 
     <sql id="Student_insert">
-                    #{id},#{username},#{password},#{sex},#{phone},#{nation},#{nativePlace},
-                    #{cId},#{gId},#{dpId},#{tId}
+                    #{id},#{username},#{password},#{sex},#{phone},#{nation},#{email},#{nativePlace},
+                    #{cId},#{gId},#{tId},#{dpId}
     </sql>
 
     <sql id="Student_where">
         <if test="id != null and id !=''">and s_id=#{id}</if>
-        <if test="username != null and username !=''">and s_username=#{s_username}</if>
-        <if test="password != null and password !=''">and password=#{s_password}</if>
-        <if test="sex != null and sex !=''">and sex=#{s_sex}</if>
-        <if test="phone != null and phone != null">and phone=#{s_phone}</if>
-        <if test="nation != null and nation !=">and nation=#{s_nation}</if>
-        <if test="nativePlace != null and nativePlace !=''">and nativePlace=#{s_nativePlace}</if>
-        <if test="cId != null and cId !=''">and cId=#{s_cId}</if>
-        <if test="gId != null and gId !=''">and gId=#{s_gId}</if>
-        <if test="dpId != null and dpId !=''">and dpId=#{s_dpId}</if>
-        <if test="tId != null and tId !=''">and tId=#{s_tId}</if>
+        <if test="username != null and username !=''">and s_username=#{username}</if>
+        <if test="password != null and password !=''">and s_password=#{password}</if>
+        <if test="sex != null and sex !=''">and s_sex=#{sex}</if>
+        <if test="phone != null and phone != ''">and s_phone=#{phone}</if>
+        <if test="nation != null and nation !=''">and s_nation=#{nation}</if>
+        <if test="nativePlace != null and nativePlace !=''">and s_nativePlace=#{nativePlace}</if>
+        <if test="email != null and email !=''">and s_email=#{email}</if>
+        <if test="cId != null and cId !=''">and s_cId=#{cId}</if>
+        <if test="gId != null and gId !=''">and s_gId=#{gId}</if>
+        <if test="dpId != null and dpId !=''">and s_dpId=#{dpId}</if>
+        <if test="tId != null and tId !=''">and s_tId=#{tId}</if>
     </sql>
 
     <sql id="Student_update">
@@ -52,14 +54,15 @@
         <if test="phone != null and phone !=''">s_phone=#{phone},</if>
         <if test="nation != null and nation !=''">s_nation=#{nation},</if>
         <if test="nativePlace != null and nativePlace !=''">s_nativePlace=#{nativePlace},</if>
+        <if test="email != null and email !=''">s_email=#{email},</if>
         <if test="cId != null and cId !=''">s_cId=#{cId},</if>
         <if test="gId != null and gId !=''">s_gId=#{gId},</if>
         <if test="dpId != null and dpId !=''">s_dpId=#{dpId},</if>
         <if test="tId != null and tId !=''">s_tId=#{tId},</if>
     </sql>
 
-    <insert id="insert" parameterType="Student">
-        insert <include refid="Student_field"></include> from student
+    <insert id="insert" parameterType="Student" useGeneratedKeys="true" keyColumn="s_id">
+            insert into student values (<include refid="Student_insert"></include>)
     </insert>
 
     <delete id="deleteById" parameterType="java.lang.Integer">
@@ -79,6 +82,10 @@
         <where>
             <include refid="Student_where"></include>
         </where>
+    </delete>
+    <delete id="deleteByClazzId" parameterType="java.lang.Integer">
+        delete from student
+        where s_cId=#{id}
     </delete>
 
     <update id="update" parameterType="Student">
@@ -117,12 +124,12 @@
         </where>
     </select>
 
-    <select id="load" parameterType="java.lang.Integer">
+    <select id="load" parameterType="java.lang.Integer" resultMap="ResultMapStudent">
         select <include refid="Student_field"></include> from student
         where s_id=#{id}
     </select>
 
-    <select id="getById" parameterType="java.lang.Integer">
+    <select id="getById" parameterType="java.lang.Integer"  resultMap="ResultMapStudent">
         select <include refid="Student_field"></include> from student
         where s_id=#{id}
     </select>
@@ -159,7 +166,7 @@
         insert into student values
         <foreach collection="list" item="item" index="index" separator=",">
             (#{item.id},#{item.username},#{item.password},#{item.sex},#{item.phone},
-            #{item.nation},#{item.nativePlace},#{item.cId},
+            #{item.nation},#{item.nativePlace},#{item.email},#{item.cId},
             #{item.gId},#{item.dpId},#{item.tId})
         </foreach>
     </insert>
@@ -174,6 +181,7 @@
                 <if test="item.phone != null and item.phone !=''">s_phone=#{item.phone},</if>
                 <if test="item.nation != null and item.nation !=''">s_nation=#{item.nation},</if>
                 <if test="item.nativePlace != null and item.nativePlace !=''">s_nativePlace=#{item.nativePlace},</if>
+                <if test="item.email != null and item.email !=''">s_email=#{email},</if>
                 <if test="item.cId != null and item.cId !=''">s_cId=#{item.cId},</if>
                 <if test="item.gId != null and item.gId !=''">s_gId=#{item.gId},</if>
                 <if test="item.dpId != null and item.dpId !=''">s_dpId=#{item.dpId},</if>

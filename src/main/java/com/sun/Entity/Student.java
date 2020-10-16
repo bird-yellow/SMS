@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.List;
 
 
@@ -11,7 +12,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Student {
+public class Student implements Serializable {
         private  Integer id;
         private String username;
         private String password;
@@ -21,6 +22,7 @@ public class Student {
         private String nation;
 //        籍贯
         private String nativePlace;
+        private  String email;
         private Integer cId;
         private Integer gId;
         private  Integer tId;
@@ -29,7 +31,7 @@ public class Student {
         private Clazz clazz;
         private Grade grade;
         private Teacher teacher;
-        private Deparment deparment;
+        private  Deparment deparment;
         private List<Course> courseList;
 
         public Student(String username, String password) {
