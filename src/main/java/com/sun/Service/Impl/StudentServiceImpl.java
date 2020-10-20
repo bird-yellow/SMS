@@ -22,4 +22,6 @@ public class StudentServiceImpl extends BaseServiceImpl<Student> implements Stud
     public void deleteByClazzId(Integer id) {
             studentDao.deleteByClazzId(id);
     }
+
+
 }

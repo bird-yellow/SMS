@@ -1,5 +1,7 @@
 package com.sun.Controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.Base.BaseController;
 import com.sun.Common.LogAnno;
 import com.sun.Entity.LoginForm;
@@ -14,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -48,8 +51,9 @@ public class LoginController extends BaseController {
         return "login/mIndex";
     }
 
+
     @RequestMapping("/login")
-    public String login(LoginForm loginForm, Model model, HttpServletRequest request){
+    public String login(LoginForm loginForm, Model model, HttpServletRequest request) throws JsonProcessingException {
             Integer userType = loginForm.getUserType();
             switch (userType){
                 case 1:
@@ -61,10 +65,13 @@ public class LoginController extends BaseController {
                         session.setAttribute(Consts.USERNAME,student.getUsername());
                         session.setAttribute(Consts.USERTYPE,1);
                         model.addAttribute("obj",student);
-                        return "login/sIndex";
+//                        model.addAttribute("type","1");
+                        return "login/sIndex"; // 不包含model, 没有用户信息
+//                        return new ObjectMapper().writeValueAsString(model);
                     }
                     else{
                         return "redirect:/login/uLogin";
+//                        return "4";
                     }
                 case 2:
                     Teacher temp = new Teacher(loginForm.getUsername(),loginForm.getPassword());

@@ -59,6 +59,12 @@
         </where>
     </delete>
 
+<!--    根据学生 删除相关课程-->
+    <delete id="deleteByStudentId" parameterType="java.lang.Integer">
+        delete from course
+        where cr_sId=#{id}
+    </delete>
+
     <update id="update" parameterType="Course">
         update course
         <set>
@@ -124,6 +130,13 @@
             <include refid="Course_where"></include>
         </where>
     </select>
+
+<!--    根据cr_name,cr_dpId 查找课程.-->
+    <select id="verifiCourseExists" parameterType="Course" resultMap="ResultMapCourse">
+        select <include refid="Course_field"></include> from course
+        where  cr_name=#{name} and cr_dpId=#{dpId}
+    </select>
+
 
     <select id="findByMap" parameterType="java.util.Map" resultMap="ResultMapCourse">
         select <include refid="Course_field"></include> from course

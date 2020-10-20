@@ -42,15 +42,7 @@
                             </div>
                         </div>
                     </form>
-                    <div class="form-group" style="margin-left: 100px;">
-                        <label>排序</label>
-                        <button class="btn btn-warning btn-sm" ><a href="/clazz/findBySqlOrderBy?type=1">院系<i class="fa fa-arrow-down"></i></a></button>
-                        <button class="btn btn-warning btn-sm" ><a href="/clazz/findBySqlOrderBy?type=2">院系<i class="fa fa-arrow-up"></i></a></button>
-                        <button class="btn btn-success btn-sm"><a href="/clazz/findBySqlOrderBy?type=3">年级<i class="fa fa-arrow-down"></i></a></button>
-                        <button class="btn btn-success btn-sm"><a href="/clazz/findBySqlOrderBy?type=4">年级<i class="fa  fa-arrow-up"></i></a></button>
-                        <button class="btn btn-info btn-sm" ><a href="/clazz/findBySqlOrderBy?type=5">班级<i class="fa fa-arrow-down"></i></a></button>
-                        <button class="btn btn-info btn-sm"><a href="/clazz/findBySqlOrderBy?type=6">班级<i class="fa fa-arrow-up"></i></a></button>
-                    </div>
+                    
                     <div class="card-body">
                         <div class="table-responsive">
                             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">

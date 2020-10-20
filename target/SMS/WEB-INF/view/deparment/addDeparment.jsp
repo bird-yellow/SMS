@@ -24,7 +24,7 @@
                 <div class="row justify-content-center">
                     <div class="col-lg-7">
                         <div class="card shadow-lg border-0 rounded-lg mt-5">
-                            <div class="card-header"><h3 class="text-center font-weight-light my-4">添加学生信息</h3></div>
+                            <div class="card-header"><h3 class="text-center font-weight-light my-4">添加院系信息</h3></div>
                             <div class="card-body">
                                 <form method="post" action="/deparment/exAdd">
                                     <div class="form-row">

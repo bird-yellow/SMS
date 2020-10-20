@@ -35,9 +35,12 @@ public class DeparmentController extends BaseController {
         public String findBySql(Deparment deparment, Model model){
                 String sql = "select * from deparment where 1=1 ";
                 if(!isEmpty(deparment.getName())){
-                        sql +=  " and ";
+                        sql +=  " and dp_name like '%" + deparment.getName() + "%' ";
                 }
-                sql += " order by ";
+                sql += " order by dp_id ";
+                Pager<Deparment> pagers = deparmentService.findBySqlRerturnEntity(sql);
+                model.addAttribute("pagers",pagers);
+                model.addAttribute("obj",deparment);
                 return "deparment/deparment";
         }
 

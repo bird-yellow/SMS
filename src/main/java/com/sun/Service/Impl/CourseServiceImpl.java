@@ -17,4 +17,14 @@ public class CourseServiceImpl extends BaseServiceImpl<Course> implements Course
     public BaseDao<Course> getBaseDao() {
         return courseDao;
     }
+
+    @Override
+    public Course verifiCourseExists(Course course) {
+        return courseDao.verifiCourseExists(course);
+    }
+
+    @Override
+    public void deleteByStudentId(Integer id) {
+            courseDao.deleteByStudentId(id);
+    }
 }

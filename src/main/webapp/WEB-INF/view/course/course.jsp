@@ -70,6 +70,9 @@
                                                     <button type="button" class="btn btn-warning">修改</button>
                                                 </a>
                                             </c:if>
+                                            <a href="/course/deleteById?id=${data.id}">
+                                                <button type="button" class="btn btn-danger">删除</button>
+                                            </a>
                                         </td>
                                     </tr>
                                 </c:forEach>

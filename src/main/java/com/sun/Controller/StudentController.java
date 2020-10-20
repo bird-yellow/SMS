@@ -2,6 +2,7 @@ package com.sun.Controller;
 
 import com.sun.Base.BaseController;
 import com.sun.Common.LogAnno;
+import com.sun.Entity.Course;
 import com.sun.Entity.Student;
 import com.sun.Service.*;
 import com.sun.Utils.Pager;
@@ -9,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/student")
@@ -24,9 +27,11 @@ public class StudentController extends BaseController {
         @Autowired
         private TeacherService teacherService;
 
+        @Autowired
+        private  CourseService courseService;
+
         @LogAnno(value = "查找学生信息")
         @RequestMapping("/findBySql")
-//        多表连接查询
         public String findBySql(Model model,Student student){
             String sql = "select * from student where 1=1 ";
             if(!isEmpty(student.getUsername())){
@@ -71,10 +76,20 @@ public class StudentController extends BaseController {
             return "student/student";
         }
 
-        @RequestMapping("/load")
-        public  void load(){
-            String sql = "select * from student where s_id=" +10000010;
-            Student student = studentService.load(10000010);
-            System.out.println(student);
+
+    /**
+     * @function: 在学生表中删除学生,在课程中删除这个学生对应的课程
+     * @param id
+     * @return
+     */
+    @RequestMapping("/deleteById")
+        public  String deleteById(Integer id){
+                Student student = studentService.load(id);
+                List<Course> lists = student.getCourseList();
+                System.out.println("学生所学课程="+ lists);
+                studentService.deleteById(id);
+                courseService.deleteByStudentId(id);
+                return "redirect:/student/findBySql";
         }
+
 }

@@ -68,7 +68,12 @@
                                       <td>${data.teacher.username}</td>
                                       <td>${data.deparment.name}</td>
                                       <td>
-                                          <input type="button" class="btn btn-primary" href="/course/findByStudentId" value="查看课程">
+                                          <a href="/student/getCourseById?id=${data.id}">
+                                              <button type="button" class="btn btn-danger btn-sm">查找课程</button>
+                                          </a>
+                                          <a href="/student/deleteById?id=${data.id}">
+                                              <button type="button" class="btn btn-info btn-sm">删除</button>
+                                          </a>
                                       </td>
                                   </tr>
                               </c:forEach>

@@ -60,11 +60,18 @@
                                         <td>${data.name}</td>
                                         <td>${data.time}</td>
                                         <td>
+                                            <c:if test="${data.deparment == null}">
+                                                <a href="/course/updateById?id=${data.id}&type=1">
+                                                    <button type="button" class="btn btn-warning">修改</button>
+                                                </a>
+                                            </c:if>
+                                            <c:if test="${data.deparment !=null}">
+                                                <a href="/course/updateById?id=${data.id}&type=2">
+                                                    <button type="button" class="btn btn-warning">修改</button>
+                                                </a>
+                                            </c:if>
                                             <a href="/course/deleteById?id=${data.id}">
                                                 <button type="button" class="btn btn-danger">删除</button>
-                                            </a>
-                                            <a href="/course/updateById?id=${data.id}">
-                                                <button type="button" class="btn btn-warning">修改</button>
                                             </a>
                                         </td>
                                     </tr>
